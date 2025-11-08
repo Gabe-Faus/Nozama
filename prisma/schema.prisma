@@ -54,16 +54,16 @@ model Session {
     user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
-model User {
-    id            String    @id @default(cuid())
-    name          String?
-    email         String?   @unique
-    emailVerified DateTime?
-    image         String?
-    accounts      Account[]
-    sessions      Session[]
-    posts         Post[]
-}
+//model User {
+//    id            String    @id @default(cuid())
+//  name          String?
+//    email         String?   @unique
+//    emailVerified DateTime?
+//    image         String?
+//    accounts      Account[]
+//    sessions      Session[]
+//    posts         Post[]
+//}
 
 model VerificationToken {
     identifier String
@@ -71,4 +71,65 @@ model VerificationToken {
     expires    DateTime
 
     @@unique([identifier, token])
+}
+
+model User {
+  id_user    Int         @id @default(autoincrement())
+  email      String      @unique
+  isAdmin    Boolean
+  reviews    Reviews[]
+  favoritos  Favoritos[]
+}
+model Category {
+  id_category  Int                  @id @default(autoincrement())
+  name         String               @unique
+  products     Product[]
+  attributes   Category_Attributes[]
+}
+model Category_Attributes {
+  id_attr      Int        @id @default(autoincrement())
+  category_id  Int
+  name         String
+  type         String?
+  category     Category   @relation(fields: [category_id], references: [id_category])
+  reviewAttrs  Review_Attributes[]
+}
+model Product {
+  id_product      Int          @id @default(autoincrement())
+  name            String
+  description     String?
+  evaluation_avg  Float
+  photo           String
+  category_id     Int
+  category        Category     @relation(fields: [category_id], references: [id_category])
+  reviews         Reviews[]
+  favoritos       Favoritos[]
+}
+model Reviews {
+  user_id        Int
+  product_id     Int
+  evaluation     Int
+  comment        String?
+  truthfull      Boolean
+  photo_review   String?
+  user           User          @relation(fields: [user_id], references: [id_user])
+  product        Product       @relation(fields: [product_id], references: [id_product])
+  attributes     Review_Attributes[]
+  @@id([user_id, product_id]) // chave primária composta
+}
+model Review_Attributes {
+  review_user_id   Int
+  review_product_id Int
+  attribute_id      Int
+  value             String
+  review            Reviews              @relation(fields: [review_user_id, review_product_id], references: [user_id, product_id])
+  attribute         Category_Attributes  @relation(fields: [attribute_id], references: [id_attr])
+  @@id([review_user_id, review_product_id, attribute_id])
+}
+model Favoritos {
+  user_id    Int
+  product_id Int
+  user       User     @relation(fields: [user_id], references: [id_user])
+  product    Product  @relation(fields: [product_id], references: [id_product])
+  @@id([user_id, product_id])
 }
