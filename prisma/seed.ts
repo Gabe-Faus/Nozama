@@ -1,9 +1,12 @@
 import {prisma} from "./";
 
 const main = async () => {
-    await prisma.pessoa.create({data: })
+    await prisma.pato.create({data: })
 
 };
+
+
+//Pato Pato Pato Pato Pato 
 
 main()
     .them(async() => await prisma.$disconnect())
