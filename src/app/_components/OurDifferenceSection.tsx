@@ -2,6 +2,9 @@
 
 {/* OurDifference-react Marina Pimentel - 222014071 */}
 
+{/* É necessario o uso da biblioteca lucide-react, para isso use o seguinte comando:  */}
+{/* pnpm install lucide-react */}
+
 import React from 'react';
 import { CheckCircle, Users, DollarSign } from 'lucide-react';
 

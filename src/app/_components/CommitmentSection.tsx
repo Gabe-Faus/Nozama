@@ -2,6 +2,9 @@
 
 {/* CommitmentSection-react Marina Pimentel - 222014071 */}
 
+{/* É necessario o uso da biblioteca lucide-react, para isso use o seguinte comando:  */}
+{/* pnpm install lucide-react */}
+
 import React from 'react';
 import { HeartHandshake, CheckCircle2 } from 'lucide-react'; 
 
