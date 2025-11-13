@@ -64,6 +64,46 @@ const main = async () => {
     const categoryMap = new Map()
     categories.forEach(cat => categoryMap.set(cat.name, cat.id))
 
+    //populando atributos específicos das categorias
+    await prisma.category_Attributes.createMany({
+      data: [
+            //atributos para eletrônicos
+            { 
+                category_id: categoryMap.get("Eletronicos"), 
+                name: "Memória RAM", 
+                type: "number",
+            },
+            { 
+                category_id: categoryMap.get("Eletronicos"), 
+                name: "Cor", 
+                type: "text",
+            },
+            { 
+                category_id: categoryMap.get("Eletronicos"), 
+                name: "Tem 5G", 
+                type: "boolean",
+            },
+
+            //atributos para livros
+            { 
+                category_id: categoryMap.get("Livros"), 
+                name: "Gênero", 
+                type: "text",
+            },
+            { 
+                category_id: categoryMap.get("Livros"), 
+                name: "Número de Páginas", 
+                type: "number",
+            },
+      ]
+    })
+
+    const ramAttr = await prisma.category_Attributes.findFirst({ where: { name: "Memória RAM" } })
+    const corAttr = await prisma.category_Attributes.findFirst({ where: { name: "Cor" } })
+    const cincoGAttr = await prisma.category_Attributes.findFirst({ where: { name: "Tem 5G" } })
+    const generoAttr = await prisma.category_Attributes.findFirst({ where: { name: "Gênero" } })
+    const paginasAttr = await prisma.category_Attributes.findFirst({ where: { name: "Número de Páginas" } })
+
     //Populando produtos
     await prisma.product.create ({
         data: {
@@ -326,10 +366,125 @@ const main = async () => {
         ],
     })
 
+    //populando atributos específicos para as Reviews
+    const smartphone = await prisma.product.findFirst({ where: { name: "Smartphone Samsung" } });
+    const laptop = await prisma.product.findFirst({ where: { name: "Laptop ASUS TUF Gaming F16" } });
+    const annaKarenina = await prisma.product.findFirst({ where: { name: "Anna Kariênina" } });
+
+    //reviews do Smartphone Samsung
+    if (smartphone && ramAttr && corAttr && cincoGAttr) {
+        //review de pessoa1
+        await prisma.review_Attributes.createMany({
+            data: [
+                {
+                    review_user_id: pessoa1.id,
+                    review_product_id: smartphone.id,
+                    attribute_id: ramAttr.id,
+                    value: "8", //memória RAM em GB
+                },
+                {
+                    review_user_id: pessoa1.id,
+                    review_product_id: smartphone.id,
+                    attribute_id: corAttr.id,
+                    value: "Preto", //cor
+                },
+                {
+                    review_user_id: pessoa1.id,
+                    review_product_id: smartphone.id,
+                    attribute_id: cincoGAttr.id,
+                    value: "true", //tem 5G
+                },
+            ],
+        });
+        
+        // Review de pessoa2
+        await prisma.review_Attributes.createMany({
+            data: [
+                {
+                    review_user_id: pessoa2.id,
+                    review_product_id: smartphone.id,
+                    attribute_id: ramAttr.id,
+                    value: "8", //memória RAM
+                },
+                {
+                    review_user_id: pessoa2.id,
+                    review_product_id: smartphone.id,
+                    attribute_id: corAttr.id,
+                    value: "Branco", //cor
+                },
+                {
+                    review_user_id: pessoa2.id,
+                    review_product_id: smartphone.id,
+                    attribute_id: cincoGAttr.id,
+                    value: "true",  //tem 5G
+                },
+            ],
+        });
+    }
+
+    // Reviews do Laptop ASUS TUF Gaming F16
+    if (laptop && ramAttr && corAttr) { 
+        // Review de pessoa1
+        await prisma.review_Attributes.createMany({
+            data: [
+                {
+                    review_user_id: pessoa1.id,
+                    review_product_id: laptop.id,
+                    attribute_id: ramAttr.id,
+                    value: "8",  //memória RAM
+                },
+                {
+                    review_user_id: pessoa1.id,
+                    review_product_id: laptop.id,
+                    attribute_id: corAttr.id,
+                    value: "Cinza Escuro",  //cor
+                },
+            ],
+        });
+    }
+
+    // Reviews do Livro Anna Kariênina
+    if (annaKarenina && generoAttr && paginasAttr) {
+        // Review de pessoa3
+        await prisma.review_Attributes.createMany({
+            data: [
+                {
+                    review_user_id: pessoa3.id,
+                    review_product_id: annaKarenina.id,
+                    attribute_id: generoAttr.id,
+                    value: "Ficção, Drama",  //gênero literério
+                },
+                {
+                    review_user_id: pessoa3.id,
+                    review_product_id: annaKarenina.id,
+                    attribute_id: paginasAttr.id,
+                    value: "864",  //numero de paginas
+                },
+            ],
+        });
+        
+        // Review de pessoa5
+        await prisma.review_Attributes.createMany({
+            data: [
+                {
+                    review_user_id: pessoa5.id,
+                    review_product_id: annaKarenina.id,
+                    attribute_id: generoAttr.id,
+                    value: "Drama, Romance", //genero 
+                },
+                {
+                    review_user_id: pessoa5.id,
+                    review_product_id: annaKarenina.id,
+                    attribute_id: paginasAttr.id,
+                    value: "700", //numero de paginas
+                },
+            ],
+        });
+    }
+
 };
 
-
-//Pato Pato Pato Pato Pato 
+ 
 
 main()
     .then(async() => await prisma.$disconnect())
