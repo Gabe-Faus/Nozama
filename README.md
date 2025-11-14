@@ -27,3 +27,9 @@ You can check out the [create-t3-app GitHub repository](https://github.com/t3-os
 ## How do I deploy this?
 
 Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/vercel), [Netlify](https://create.t3.gg/en/deployment/netlify) and [Docker](https://create.t3.gg/en/deployment/docker) for more information.
+
+## About the project
+
+Este projeto é uma plataforma desenvolvida com o stack T3 (Next.js, TypeScript, Prisma, entre outras tecnologias) que oferece acesso a uma grande coleção de avaliações de produtos encontrados na Amazon. A proposta é fornecer um ambiente organizado e confiável onde usuários assinantes podem consultar opiniões autênticas de diversos consumidores, facilitando a tomada de decisão antes de uma compra.
+
+Dentro do site, os produtos são categorizados e acompanhados de análises detalhadas, permitindo que o usuário descubra quais são os melhores itens de cada categoria com base em avaliações agregadas. A plataforma centraliza essas informações de forma clara e acessível, oferecendo uma experiência prática para quem busca reviews completos e imparciais.
