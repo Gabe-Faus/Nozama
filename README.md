@@ -33,3 +33,39 @@ Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/ver
 Este projeto é uma plataforma desenvolvida com o stack T3 (Next.js, TypeScript, Prisma, entre outras tecnologias) que oferece acesso a uma grande coleção de avaliações de produtos encontrados na Amazon. A proposta é fornecer um ambiente organizado e confiável onde usuários assinantes podem consultar opiniões autênticas de diversos consumidores, facilitando a tomada de decisão antes de uma compra.
 
 Dentro do site, os produtos são categorizados e acompanhados de análises detalhadas, permitindo que o usuário descubra quais são os melhores itens de cada categoria com base em avaliações agregadas. A plataforma centraliza essas informações de forma clara e acessível, oferecendo uma experiência prática para quem busca reviews completos e imparciais.
+
+## Getting Started
+
+Para iniciar o projeto pela primeira vez, siga essa sequência de comandos:  
+
+**1°:**&nbsp;&nbsp;   git pull origin main     &nbsp;&nbsp;&nbsp;(Caso exista uma branch mais atualizada no GitHub)  
+**2°:**&nbsp;&nbsp;   pnpm i  
+**3°:**&nbsp;&nbsp;   npx prisma migrate dev --name init     &nbsp;&nbsp;&nbsp;(Criar banco de dados e tabelas)  
+**4°:**&nbsp;&nbsp;   pnpm ts-node prisma/seed.ts     &nbsp;&nbsp;&nbsp;(Popular banco de dados)    
+**5°:**&nbsp;&nbsp;   pnpm prisma studio  
+<br>
+
+
+Caso queria apenas rodar novamente:  
+  
+**1°:**&nbsp;&nbsp;   pnpm i  
+**2°:**&nbsp;&nbsp;   pnpm db:push    
+**3°:**&nbsp;&nbsp;   pnpm prisma studio  
+<br>
+
+
+Caso tenha feito alguma alteração no seed:  
+
+**1°:**&nbsp;&nbsp;   pnpm prisma migrate reset  
+**2°:**&nbsp;&nbsp;   pnpm ts-node prisma/seed.ts  
+**3°:**&nbsp;&nbsp;   pnpm prisma studio  
+<br>
+
+
+Caso queria subir as alterações locais para o GitHub:  
+
+**1°:**&nbsp;&nbsp;   git pull origin main     &nbsp;&nbsp;&nbsp;(Caso exista uma branch mais atualizada no GitHub)  
+**2°:**&nbsp;&nbsp;   git add .  
+**3°:**&nbsp;&nbsp;   git commit -m "Frase com  a ideia do que foi feito"  
+**4°:**&nbsp;&nbsp;   git push origin branch-que-você-está    
+
