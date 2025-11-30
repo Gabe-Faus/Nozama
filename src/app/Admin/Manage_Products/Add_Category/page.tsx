@@ -4,8 +4,8 @@ import Link from "next/link";
 import { LatestPost } from "@/app/_components/post";
 import { auth } from "@/server/auth";
 import { api, HydrateClient } from "@/trpc/server";
-import Add_Product from "../../../_components/Add_Product";
-import Add_Category from "@/app/_components/Add_Category";
+import Add_Product from "../Add_Product/_components/Add_Product";
+import Add_Category from "@/app/Admin/Manage_Products/Add_Category/_components/Add_Category";
 
 
 
