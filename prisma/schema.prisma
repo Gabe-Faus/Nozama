@@ -15,24 +15,24 @@ datasource db {
 }
 
 // Necessary for Next auth
-//model Account {
-//id                       String  @id @default(cuid())
-//userId                   String
-//type                     String
-//provider                 String
-//providerAccountId        String
-//refresh_token            String? // @db.Text
-//access_token             String? // @db.Text
-//expires_at               Int?
-//token_type               String?
-//scope                    String?
-//id_token                 String? // @db.Text
-//session_state            String?
-//user                     User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+model Account {
+id                       String  @id @default(cuid())
+userId                   Int
+type                     String
+provider                 String
+providerAccountId        String
+refresh_token            String? // @db.Text
+access_token             String? // @db.Text
+expires_at               Int?
+token_type               String?
+scope                    String?
+id_token                 String? // @db.Text
+session_state            String?
+user                     User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 //refresh_token_expires_in Int?
 
-//@@unique([provider, providerAccountId])
-//}
+@@unique([provider, providerAccountId])
+}
 
 model Session {
   id           String   @id @default(cuid())
@@ -50,7 +50,10 @@ model Session {
 //    image         String?
 //    accounts      Account[]
 //    sessions      Session[]
-//    posts         Post[]
+    //posts         Post[]
+//    isAdmin       Boolean?  @default(false)
+//    reviews       Reviews[]
+//    favoritos     Favoritos[]
 //}
 
 model VerificationToken {
@@ -64,10 +67,14 @@ model VerificationToken {
 model User {
   id        Int         @id @default(autoincrement())
   email     String      @unique
-  isAdmin   Boolean
+  isAdmin   Boolean?    @default(false)
   reviews   Reviews[]
   favoritos Favoritos[]
-  Session   Session[]
+  name          String?
+  emailVerified DateTime?
+  image         String?
+  accounts      Account[]
+  sessions      Session[]
 }
 
 model Category {

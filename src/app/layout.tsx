@@ -4,6 +4,8 @@ import { type Metadata } from "next";
 import { Geist } from "next/font/google";
 
 import { TRPCReactProvider } from "@/trpc/react";
+//import AuthProvider from "./_components/AuthProvider"; NÃO ESTAVA FUNCIONANDO
+import AuthProvider from "@/app/_components/AuthProvider"; 
 
 export const metadata: Metadata = {
   title: "Create T3 App",
@@ -22,7 +24,9 @@ export default function RootLayout({
   return (
     <html lang="pt-br" className={`${geist.variable}`}>
       <body>
-        <TRPCReactProvider>{children}</TRPCReactProvider>
+        <AuthProvider>
+          <TRPCReactProvider>{children}</TRPCReactProvider>
+        </AuthProvider>
       </body>
     </html>
   );
