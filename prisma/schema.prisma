@@ -73,6 +73,7 @@ model User {
   name          String?
   emailVerified DateTime?
   image         String?
+  password      String?
   accounts      Account[]
   sessions      Session[]
 }
