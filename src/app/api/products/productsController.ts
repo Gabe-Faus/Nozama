@@ -73,3 +73,4 @@ export async function getProductDetails(id_product: number) {
         throw new Error("Falha ao carregar os detalhes do produto.");
     }
 }
+
