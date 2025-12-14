@@ -3,10 +3,12 @@
 {/* Navbar Gabriel pessoa Faustino - 231006121 */}
 
 import React, {useState} from "react";
+import { useSession, signOut } from "next-auth/react";
 
 
 const Navbar: React.FC = () => {
   const [menuOpen, setMenuOpen] = useState(false);
+  const { data: session } = useSession();
 
   const handleScrollToSection = (id: string) => {
     const section = document.getElementById(id);
@@ -42,8 +44,27 @@ const Navbar: React.FC = () => {
           </div>
         </div>
 
-        {/* Orders and Returns and Trolley */}
+        {/* Sign in/Log in, Orders and Returns, and Trolley */}
         <div className="flex items-center gap-4 cursor-pointer">
+          {session?.user ? (
+            <div className="flex items-center gap-1 md:gap-2">
+              <span className="hidden md:inline text-white">Hello, {session.user.name}</span>
+              <span className="md:hidden text-white">Hi, {session.user.name?.split(' ')[0] || 'User'}</span>
+              <span className="text-gray-400 hidden sm:inline">|</span>
+              <button onClick={() => signOut()}
+                className="text-white hover:text-gray-300 text-sm flex items-center gap-1"
+                aria-label="Sign Out">
+                <svg className="w-5 h-5 md:hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+                </svg>
+
+                <span className="hidden md:inline">(Sign Out)</span>
+              </button>
+            </div>
+          ) : (
+            <a href="/Login" className="text-white whitespace-nowrap">Sign in</a>
+          )}
+
           <h2 className="hidden md:block text-white">Orders and returns</h2>
           <div className="hidden md:flex items-center gap-1">
             <img src="/trolley.png" alt="Trolley" className="h-10" />
