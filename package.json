@@ -4,7 +4,6 @@
   "private": true,
   "type": "module",
   "scripts": {
-
     "build": "next build",
     "check": "next lint && tsc --noEmit",
     "db:generate": "prisma migrate dev",
@@ -22,9 +21,8 @@
     "typecheck": "tsc --noEmit"
   },
   "prisma": {
-  "seed": "node -r ts-node/register prisma/seed.ts"
-},
-
+    "seed": "node -r ts-node/register prisma/seed.ts"
+  },
   "dependencies": {
     "@auth/prisma-adapter": "^2.7.2",
     "@prisma/client": "^6.5.0",
@@ -38,6 +36,7 @@
     "next-auth": "5.0.0-beta.25",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "react-hot-toast": "^2.6.0",
     "server-only": "^0.0.1",
     "superjson": "^2.2.1",
     "tsx": "^4.20.6",

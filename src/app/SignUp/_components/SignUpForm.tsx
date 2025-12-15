@@ -62,7 +62,7 @@ const SignUpForm: React.FC = () => {
 
 
     return (
-        <div className="w-[90vw] max-w-[400px] mx-auto mt-4 px-4 py-6 border border-gray-300 rounded-lg shadow-sm">
+        <div className="w-[90vw] max-w-[400px] mx-auto mt-4 px-4 py-6 border border-gray-300 rounded-lg shadow-sm ">
             <div>
                 <h1 className="mb-6 text-2xl font-normal">Create account</h1>
 

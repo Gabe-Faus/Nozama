@@ -1,27 +1,43 @@
 "use client";
 
-{/* Navbar Gabriel pessoa Faustino - 231006121 */}
+import React, { useState } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 
-import React, {useState} from "react";
-
+/**
+ * ⚠️ Ajuste este hook conforme seu auth real
+ * Exemplo:
+ * const { user } = useSession();
+ * const isAdmin = user?.role === "ADMIN";
+ */
+const useAuthMock = () => {
+  return {
+    isAdmin: false, // 🔴 TROQUE isso pelo valor real
+  };
+};
 
 const NavbarPage: React.FC = () => {
   const [menuOpen, setMenuOpen] = useState(false);
+  const router = useRouter();
 
-  const handleScrollToSection = (id: string) => {
-    const section = document.getElementById(id);
-    if (section) {
-      section.scrollIntoView({ behavior: "smooth" });
-      setMenuOpen(false); 
+  const { isAdmin } = useAuthMock();
+
+  const handleMenuClick = () => {
+    setMenuOpen(false);
+
+    if (isAdmin) {
+      router.push("/Admin/Manage_Products");
+    } else {
+      router.push("/Favorites");
     }
   };
 
   return (
-    <nav>
-      {/* Primeira navbar */}
-      <div className="bg-navbar h-15 flex items-center justify-between px-4">
+    <nav className="w-full">
+      {/* Navbar principal */}
+      <div className="bg-navbar h-16 flex items-center justify-between px-4 relative">
         {/* ZIP CODE */}
-        <div className="flex items-center gap-2 cursor-pointer">
+        <div className="flex items-center gap-2">
           <img
             src="/localPin.png"
             alt="Local Pin"
@@ -32,70 +48,58 @@ const NavbarPage: React.FC = () => {
           </h2>
         </div>
 
-        {/* Search Bar */}
-        <div className="flex-1 flex justify-center items-center px-2 cursor-pointer">
+        {/* Search */}
+        <div className="flex-1 flex justify-center items-center px-2">
           <div className="h-10 w-full max-w-[650px] bg-white text-black/70 flex items-center px-4">
             Search Nozama.com.br
           </div>
-          <div className="h-10 w-10 bg-amber-500 hover:bg-amber-600 flex justify-center items-center">
+          <div className="h-10 w-10 bg-amber-500 flex justify-center items-center">
             <img src="/magnifier.png" alt="Magnifier" className="h-8" />
           </div>
         </div>
 
-        {/* Orders and Returns and Trolley */}
-        <div className="flex items-center gap-4 cursor-pointer">
-          <h2 className="hidden md:block text-white">Orders and returns</h2>
+        {/* Trolley + Menu */}
+        <div className="relative flex items-center gap-4">
           <div className="hidden md:flex items-center gap-1">
             <img src="/trolley.png" alt="Trolley" className="h-10" />
-            <h1 className="text-white">Trolley</h1>
+            <span className="text-white">Trolley</span>
           </div>
 
-          {/* Botão sanduíche (mobile) */}
+          {/* Menu sanduíche */}
           <button
             onClick={() => setMenuOpen(!menuOpen)}
-            className="md:hidden text-3xl focus:outline-none text-white hover:text-blue-400 transition"
+            className="text-3xl text-white hover:text-blue-400 transition"
           >
             ☰
           </button>
+
+          {/* Dropdown */}
+            {menuOpen && (
+              <div className="absolute right-0 top-14 w-56 bg-white rounded shadow-lg z-50">
+                
+                {/* Admin ou User */}
+                <button
+                  onClick={handleMenuClick}
+                  className="w-full text-left px-4 py-3 hover:bg-gray-100"
+                >
+                  {isAdmin ? "Manage Products" : "My Favorites"}
+                </button>
+
+                {/* Home */}
+                <button
+                  onClick={() => {
+                    setMenuOpen(false);
+                    router.push("/products/catalogo");
+                  }}
+                  className="w-full text-left px-4 py-3 hover:bg-gray-100"
+                >
+                  Home
+                </button>
+              </div>
+            )}
+
         </div>
       </div>
-
-      {/* Segunda navbar (desktop) */}
-      <div className="h-10 bg-scndnavbar hidden md:flex flex-row justify-center items-center text-center gap-30">
-        <h1
-          onClick={() => handleScrollToSection("about-section")}
-          className="text-white font-amazon font-bold cursor-pointer hover:text-blue-400 transition"
-        >
-          Home Page
-        </h1>
-
-
-        <a
-          className="text-blue-600 font-amazon font-bold cursor-pointer hover:text-blue-200 transition"
-          href="https://www.amazon.com.br/"
-        >
-          Amazon
-        </a>
-      </div>
-
-      {/* Menu mobile (mostrado quando menuOpen = true) */}
-      {menuOpen && (
-        <div className="md:hidden bg-scndnavbar flex flex-col items-center py-4 space-y-2 animate-slideDown">
-          <h1
-            onClick={() => handleScrollToSection("about-section")}
-            className="text-white font-amazon font-bold cursor-pointer"
-          >
-            Home Page
-          </h1>
-          
-          <a
-            className="text-blue-600 font-amazon font-bold cursor-pointer hover:text-blue-200 transition"
-            href="https://www.amazon.com.br/"
-          >
-            Amazon
-          </a>
-        </div>
-      )}
     </nav>
   );
 };
