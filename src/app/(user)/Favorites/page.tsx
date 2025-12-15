@@ -1,24 +1,50 @@
-import Link from "next/link";
-
-
-import { LatestPost } from "@/app/_components/post";
 import { auth } from "@/server/auth";
-import { api, HydrateClient } from "@/trpc/server";
+import { PrismaClient } from "@prisma/client";
 import Favorites from "./_components/Favorites";
+import { redirect } from "next/navigation";
 
+const prisma = new PrismaClient();
 
-
-export default async function Home() {
-  const hello = await api.post.hello({ text: "from tRPC" });
+export default async function FavoritesPage() {
+  // 🔐 Sessão do usuário
   const session = await auth();
 
-  if (session?.user) {
-    void api.post.getLatest.prefetch();
+  if (!session?.user?.email) {
+    redirect("/Login"); // ou a rota que você usa
   }
+
+  // 🔍 Buscar usuário + favoritos
+  const user = await prisma.user.findUnique({
+    where: {
+      email: session.user.email,
+    },
+    include: {
+      favoritos: {
+        include: {
+          product: true,
+        },
+      },
+    },
+  });
+
+  if (!user) {
+    redirect("/Login");
+  }
+
+  // 📦 Formatar para o componente
+  const favoritos = user.favoritos.map((fav) => ({
+    product: {
+      id: fav.product.id,
+      name: fav.product.name,
+      description: fav.product.description ?? "",
+      evaluation_avg: fav.product.evaluation_avg,
+      photo: fav.product.photo,
+    },
+  }));
 
   return (
     <main>
-        <Favorites/>
+      <Favorites favoritos={favoritos} />
     </main>
-  )
+  );
 }
