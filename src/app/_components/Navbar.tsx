@@ -135,6 +135,16 @@ const Navbar: React.FC = () => {
         >
           Amazon
         </a>
+
+        {/* LINK PARA IR PARA O CATALOGO*/}
+        {session?.user && (
+          <a
+            href="/products/catalogo"
+            className="text-white font-amazon font-bold cursor-pointer hover:text-blue-400 transition"
+          >
+            📦 Product Catalog
+          </a>
+        )}
       </div>
 
       {/* Menu mobile */}
@@ -164,6 +174,12 @@ const Navbar: React.FC = () => {
           >
             Amazon
           </a>
+
+          {session?.user && (
+            <a href="/products/catalogo" className="text-white font-amazon font-bold cursor-pointer mt-2 border-t border-gray-600 pt-2">
+              📦 Product Catalog
+            </a>
+          )}
         </div>
       )}
     </nav>
