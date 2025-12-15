@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { Heart, Star, ArrowLeft } from 'lucide-react';
+import { Heart, Star, ArrowLeft, Trash2 } from 'lucide-react';
 
 // Tipagem
 interface ReviewAttribute {
@@ -25,45 +25,20 @@ interface ProductDetailsProps {
   photo: string;
   category: { name: string };
   reviews: Review[];
-  isFavorite?: boolean;
-  userId?: number;
 }
 
 const ProductDetailsDisplay: React.FC<ProductDetailsProps> = (product) => {
-  const [isFavorite, setIsFavorite] = useState(product.isFavorite || false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isFavorite, setIsFavorite] = useState(false);
+  
 
-  const toggleFavorite = async () => {
-    setIsLoading(true);
-    try {
-      if (isFavorite) {
-        // Remover dos favoritos - método HTTP correto é DELETE
-        const response = await fetch(`/api/favorites/${product.id}`, {
-          method: 'DELETE', // ← CORRIGIDO: 'deleteFavoritos' não existe
-        });
-        
-        if (response.ok) {
-          setIsFavorite(false);
-        }
-      } else {
-        // Adicionar aos favoritos - método HTTP correto é POST
-        const response = await fetch('/api/favorites', {
-          method: 'POST', // ← CORRIGIDO: 'insertFavoritos' não existe
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ productId: product.id }),
-        });
-        
-        if (response.ok) {
-          setIsFavorite(true);
-        }
-      }
-    } catch (error) {
-      console.error('Erro ao atualizar favoritos:', error);
-    } finally {
-      setIsLoading(false);
-    }
+  const handleFavorite = () => {
+    setIsFavorite(!isFavorite);
+    // Fazer lógica para adicionar aos favoritos no banco de dados, testar se funciona
+  };
+
+  const deleteProduct = () => {
+    alert(`Deletando ${product.name}`);
+    // Não faremos a logica para esse projeto
   };
 
   const renderStars = (rating: number) => {
@@ -87,7 +62,7 @@ const ProductDetailsDisplay: React.FC<ProductDetailsProps> = (product) => {
       <div className="bg-white border-b">
         <div className="container mx-auto px-4 py-3">
           <Link 
-            href="/products/catalogo"
+            href="/products/catalogo" 
             className="inline-flex items-center text-blue-600 hover:text-blue-800 transition-colors"
           >
             <ArrowLeft size={20} className="mr-2" />
@@ -114,21 +89,14 @@ const ProductDetailsDisplay: React.FC<ProductDetailsProps> = (product) => {
                   }}
                 />
                 <button
-                  onClick={toggleFavorite} // ← CORRIGIDO: use toggleFavorite, não handleFavorite
-                  disabled={isLoading}
-                  className={`absolute top-4 right-4 bg-white p-3 rounded-full shadow-lg hover:shadow-xl transition-shadow ${
-                    isLoading ? 'opacity-50 cursor-not-allowed' : ''
-                  }`}
+                  onClick={handleFavorite}
+                  className="absolute top-4 right-4 bg-white p-3 rounded-full shadow-lg hover:shadow-xl transition-shadow"
                   aria-label={isFavorite ? "Remover dos favoritos" : "Adicionar aos favoritos"}
                 >
-                  {isLoading ? (
-                    <div className="w-7 h-7 border-2 border-red-500 border-t-transparent rounded-full animate-spin"></div>
-                  ) : (
-                    <Heart 
-                      size={28} 
-                      className={isFavorite ? 'fill-red-500 text-red-500' : 'text-gray-400 hover:text-red-500 transition-colors'}
-                    />
-                  )}
+                  <Heart 
+                    size={28} 
+                    className={isFavorite ? 'fill-red-500 text-red-500' : 'text-gray-400 hover:text-red-500 transition-colors'}
+                  />
                 </button>
               </div>
             </div>
@@ -149,6 +117,19 @@ const ProductDetailsDisplay: React.FC<ProductDetailsProps> = (product) => {
               <div className="prose max-w-none text-gray-700 mb-6">
                 <p className="text-lg leading-relaxed">{product.description}</p>
               </div>
+
+              {/* Ações do Produto */}
+              <div className="border-t pt-6">
+                <div className="flex flex-col sm:flex-row gap-4">
+                  <button
+                    onClick={deleteProduct}
+                    className="flex-1 bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-bold py-3 px-6 rounded-lg flex items-center justify-center gap-2 transition-colors"
+                    >
+                      <Trash2 size={20} />
+                      Deletar Produto
+                    </button>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -156,7 +137,7 @@ const ProductDetailsDisplay: React.FC<ProductDetailsProps> = (product) => {
           <div className="lg:w-1/2">
             <div className="bg-white rounded-xl shadow-lg p-6 h-full">
               <h2 className="text-2xl font-bold text-gray-900 mb-6 pb-4 border-b">
-                Avaliações dos Clientes ({product.reviews.length})
+                Avaliações dos Clientes
               </h2>
               
               {product.reviews.length > 0 ? (
@@ -194,6 +175,21 @@ const ProductDetailsDisplay: React.FC<ProductDetailsProps> = (product) => {
                           </div>
                         </div>
                       )}
+
+                      
+                      {/**Ainda está dando erro, tinha esquecido que review tinha foto, vou concertar */}
+
+                      {/* Foto da Review 
+                      {review.hasOwnProperty('photo_review') && review.photo_review && (
+                        <div className="mt-4">
+                          <p className="text-sm text-gray-600 mb-2">Foto do cliente:</p>
+                          <img
+                            src={`/review_photos/${review.photo_review}`}
+                            alt="Foto da review"
+                            className="rounded-lg max-w-xs"
+                          />
+                        </div>
+                      )} */}
                     </div>
                   ))}
                 </div>
@@ -207,7 +203,7 @@ const ProductDetailsDisplay: React.FC<ProductDetailsProps> = (product) => {
                 </div>
               )}
 
-              {/* Botão para adicionar review */}
+              {/* Botão para adicionar review, fazer logica para alterar no banco de dados */}
               <div className="mt-8 pt-6 border-t">
                 <button className="w-full py-3 border-2 border-blue-600 text-blue-600 hover:bg-blue-50 rounded-lg font-medium transition-colors">
                   + Adicionar Minha Avaliação
