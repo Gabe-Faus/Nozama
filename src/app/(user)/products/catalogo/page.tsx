@@ -2,18 +2,18 @@
 import React from 'react';
 import { getProductsForCatalog } from '../../../api/products/productsController'; 
 import ProductList from './_components/catalogo';
-// import { auth } from '@/server/auth'; 
+import { auth } from '@/server/auth'; 
 
 const userIdFixo = 1;
 
 export default async function ProductCatalogPage() {
-  //const session = await auth();
-  //const userId = session?.user?.id ? parseInt(session.user.id) : undefined;
+  const session = await auth();
+  const userId = session?.user?.id ? parseInt(session.user.id) : 1;
   
   let products = [];
   try {
     // Acessa o banco de dados através da função
-    products = await getProductsForCatalog();
+   products = await getProductsForCatalog(userId);
 
   } catch (error) {
     // Em caso de falha na busca
@@ -29,7 +29,7 @@ export default async function ProductCatalogPage() {
   // Passa os dados buscados para o componente
   return (
     <main>
-        <ProductList products={products} userId={userIdFixo} />
+        <ProductList products={products} userId={userId} />
     </main>
   );
 }

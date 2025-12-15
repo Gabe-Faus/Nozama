@@ -1,9 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { PrismaClient } from '@prisma/client';
-//import { auth } from '@/server/auth';
+import { auth } from '@/server/auth';
 
 const prisma = new PrismaClient();
-const UserIdFixo = 1;
 
 // Remover favorito
 export async function DELETE(
@@ -11,15 +10,15 @@ export async function DELETE(
   { params }: { params: { productId: string } }
 ) {
   try {
-    //const session = await auth();
-    //if (!session?.user?.id) {
-      //return NextResponse.json(
-        //{ error: 'Não autorizado' },
-      //);
-    //}
+    const session = await auth();
+    if (!session?.user?.id) {
+      return NextResponse.json(
+        { error: 'Não autorizado' },
+      );
+    }
 
      // Converte string para number
-    const userId = UserIdFixo;
+    const userId = parseInt(session.user.id);
     if (isNaN(userId)) {
       return NextResponse.json(
         { error: 'ID de usuário inválido' },
@@ -38,7 +37,7 @@ export async function DELETE(
     const existingFavorite = await prisma.favoritos.findUnique({
       where: {
         user_id_product_id: {
-          user_id: UserIdFixo,
+          user_id: userId,
           product_id: productId,
         },
       },
@@ -54,7 +53,7 @@ export async function DELETE(
     await prisma.favoritos.delete({
       where: {
         user_id_product_id: {
-          user_id: UserIdFixo,
+          user_id: userId,
           product_id: productId,
         },
       },
@@ -78,14 +77,14 @@ export async function getIsFavorito(
   { params }: { params: { productId: string } }
 ) {
   try {
-    //const session = await auth();
-    //if (!session?.user?.id) {
-      //return NextResponse.json(
-        //{ error: 'Não autorizado' },
-      //);
-    //}
+    const session = await auth();
+    if (!session?.user?.id) {
+      return NextResponse.json(
+        { error: 'Não autorizado' },
+      );
+    }
 
-    const userId = UserIdFixo;
+    const userId = parseInt(session.user.id);
     if (isNaN(userId)) {
       return NextResponse.json(
         { error: 'ID de usuário inválido' },
@@ -103,7 +102,7 @@ export async function getIsFavorito(
     const favorite = await prisma.favoritos.findUnique({
       where: {
         user_id_product_id: {
-          user_id: UserIdFixo,
+          user_id: userId,
           product_id: productId,
         },
       },
