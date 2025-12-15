@@ -29,7 +29,6 @@ const ProductList: React.FC<ProductListProps> = ({ products, userId }) => {
     
     const isCurrentlyFavorite = favorites.includes(productId);
     try {
-      
       //Remove dos favoritos
       if (isCurrentlyFavorite) {
         await fetch(`/api/favorites/${productId}`, { method: 'DELETE' });

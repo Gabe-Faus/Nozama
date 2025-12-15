@@ -39,7 +39,7 @@ const ProductDetailsDisplay: React.FC<ProductDetailsProps> = (product) => {
       if (isFavorite) {
         // Remover dos favoritos - método HTTP correto é DELETE
         const response = await fetch(`/api/favorites/${product.id}`, {
-          method: 'DELETE', // ← CORRIGIDO: 'deleteFavoritos' não existe
+          method: 'DELETE',
         });
         
         if (response.ok) {
@@ -48,7 +48,7 @@ const ProductDetailsDisplay: React.FC<ProductDetailsProps> = (product) => {
       } else {
         // Adicionar aos favoritos - método HTTP correto é POST
         const response = await fetch('/api/favorites', {
-          method: 'POST', // ← CORRIGIDO: 'insertFavoritos' não existe
+          method: 'POST', 
           headers: {
             'Content-Type': 'application/json',
           },
@@ -114,7 +114,7 @@ const ProductDetailsDisplay: React.FC<ProductDetailsProps> = (product) => {
                   }}
                 />
                 <button
-                  onClick={toggleFavorite} // ← CORRIGIDO: use toggleFavorite, não handleFavorite
+                  onClick={toggleFavorite}
                   disabled={isLoading}
                   className={`absolute top-4 right-4 bg-white p-3 rounded-full shadow-lg hover:shadow-xl transition-shadow ${
                     isLoading ? 'opacity-50 cursor-not-allowed' : ''

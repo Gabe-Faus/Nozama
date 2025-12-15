@@ -1,23 +1,22 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { PrismaClient } from '@prisma/client';
-//import { auth } from '@/server/auth';
+import { auth } from '@/server/auth';
 
 const prisma = new PrismaClient();
-const userIdFixo = 1;
 
 // Buscar favoritos do usuário
 export async function getFavoritos(request: NextRequest) {
   try {
-    //const session = await auth();
+    const session = await auth();
     
-    //if (!session?.user?.id) {
-      //return NextResponse.json(
-        //{ error: 'Não autorizado' },
-      //);
-    //}
+    if (!session?.user?.id) {
+      return NextResponse.json(
+        { error: 'Não autorizado' },
+      );
+    }
 
     // Converte string para number
-    const userId = userIdFixo;
+    const userId = parseInt(session.user.id);
     if (isNaN(userId)) {
       return NextResponse.json(
         { error: 'ID de usuário inválido' },
@@ -26,7 +25,7 @@ export async function getFavoritos(request: NextRequest) {
 
     const favoritos = await prisma.favoritos.findMany({
       where: {
-        user_id: userIdFixo,
+        user_id: userId,
       },
       include: {
         product: {
@@ -50,15 +49,15 @@ export async function getFavoritos(request: NextRequest) {
 // Adicionar favorito
 export async function POST(request: NextRequest) {
   try {
-    //const session = await auth();
-    //if (!session?.user?.id) {
-      //return NextResponse.json(
-        //{ error: 'Não autorizado' },
-      //);
-   // }
+    const session = await auth();
+    if (!session?.user?.id) {
+      return NextResponse.json(
+        { error: 'Não autorizado' },
+      );
+    }
 
     // converte de string para number
-    const userId = userIdFixo;
+    const userId = parseInt(session.user.id);
     if (isNaN(userId)) {
       return NextResponse.json(
         { error: 'ID de usuário inválido' },
@@ -77,7 +76,7 @@ export async function POST(request: NextRequest) {
     const existingFavorite = await prisma.favoritos.findUnique({
       where: {
         user_id_product_id: {
-          user_id: userIdFixo,
+          user_id: userId,
           product_id: productId,
         },
       },
@@ -92,7 +91,7 @@ export async function POST(request: NextRequest) {
     // Adicionar aos favoritos
     const favorito = await prisma.favoritos.create({
       data: {
-        user_id: userIdFixo,
+        user_id: userId,
         product_id: productId,
       },
       include: {
