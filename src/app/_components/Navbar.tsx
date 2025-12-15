@@ -4,15 +4,14 @@
 
 import React, {useState} from "react";
 import { useSession, signOut } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 
 const Navbar: React.FC = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const { data: session } = useSession();
 
-  console.log("Sessão no Navbar:", session);
-  console.log("Usuário:", session?.user);
-  console.log("isAdmin:", (session?.user as any)?.isAdmin);
+  const router = useRouter();
 
   const handleScrollToSection = (id: string) => {
     const section = document.getElementById(id);
@@ -20,6 +19,10 @@ const Navbar: React.FC = () => {
       section.scrollIntoView({ behavior: "smooth" });
       setMenuOpen(false); 
     }
+  };
+
+  const handleGoToAccount = () => {
+    router.push("/Account");
   };
 
   return (
@@ -53,13 +56,15 @@ const Navbar: React.FC = () => {
           {session?.user ? (
             <div className="flex items-center gap-1 md:gap-2">
 
-              {/* Para todos os usuários */}
-              <span className="hidden md:inline text-white">
-                Hello, {session.user.name || session.user.email?.split('@')[0] || 'User'}
-              </span>
-              <span className="md:hidden text-white">
-                Hello, {(session.user.name || session.user.email?.split('@')[0] || 'User')?.split(' ')[0]}
-              </span>
+              <button onClick={handleGoToAccount} className="text-white hover:text-gray-300 transition-colors">
+                {/* Para todos os usuários */}
+                <span className="hidden md:inline text-white">
+                  Hello, {session.user.name || session.user.email?.split('@')[0] || 'User'}
+                </span>
+                <span className="md:hidden text-white">
+                  Hello, {(session.user.name || session.user.email?.split('@')[0] || 'User')?.split(' ')[0]}
+                </span>
+              </button>
 
               {/* Para ADMIN */}
               {(session.user as any).isAdmin && ( 
