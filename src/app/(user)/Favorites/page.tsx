@@ -6,17 +6,16 @@ import { redirect } from "next/navigation";
 const prisma = new PrismaClient();
 
 export default async function FavoritesPage() {
-  // 🔐 Sessão do usuário
   const session = await auth();
 
-  if (!session?.user?.email) {
-    redirect("/Login"); // ou a rota que você usa
+  if (!session?.user?.id || typeof session.user.id !== "number") {
+    redirect("/Login");
   }
 
-  // 🔍 Buscar usuário + favoritos
+  
   const user = await prisma.user.findUnique({
     where: {
-      email: session.user.email,
+      id: session.user.id, 
     },
     include: {
       favoritos: {
@@ -31,7 +30,7 @@ export default async function FavoritesPage() {
     redirect("/Login");
   }
 
-  // 📦 Formatar para o componente
+ 
   const favoritos = user.favoritos.map((fav) => ({
     product: {
       id: fav.product.id,

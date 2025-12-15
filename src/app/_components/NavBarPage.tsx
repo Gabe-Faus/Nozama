@@ -1,29 +1,26 @@
 "use client";
 
 import React, { useState } from "react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
-
-/**
- * ⚠️ Ajuste este hook conforme seu auth real
- * Exemplo:
- * const { user } = useSession();
- * const isAdmin = user?.role === "ADMIN";
- */
-const useAuthMock = () => {
-  return {
-    isAdmin: false, // 🔴 TROQUE isso pelo valor real
-  };
-};
+import { useSession } from "next-auth/react";
 
 const NavbarPage: React.FC = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const router = useRouter();
 
-  const { isAdmin } = useAuthMock();
+  const { data: session, status } = useSession();
+
+  // 🔑 SE isAdmin === true → é admin
+  const isAdmin = session?.user?.isAdmin === true;
+  const isLoggedIn = status === "authenticated";
 
   const handleMenuClick = () => {
     setMenuOpen(false);
+
+    if (!isLoggedIn) {
+      router.push("/login");
+      return;
+    }
 
     if (isAdmin) {
       router.push("/Admin/Manage_Products");
@@ -34,8 +31,8 @@ const NavbarPage: React.FC = () => {
 
   return (
     <nav className="w-full">
-      {/* Navbar principal */}
       <div className="bg-navbar h-16 flex items-center justify-between px-4 relative">
+
         {/* ZIP CODE */}
         <div className="flex items-center gap-2">
           <img
@@ -58,14 +55,8 @@ const NavbarPage: React.FC = () => {
           </div>
         </div>
 
-        {/* Trolley + Menu */}
+        {/* Menu */}
         <div className="relative flex items-center gap-4">
-          <div className="hidden md:flex items-center gap-1">
-            <img src="/trolley.png" alt="Trolley" className="h-10" />
-            <span className="text-white">Trolley</span>
-          </div>
-
-          {/* Menu sanduíche */}
           <button
             onClick={() => setMenuOpen(!menuOpen)}
             className="text-3xl text-white hover:text-blue-400 transition"
@@ -73,31 +64,28 @@ const NavbarPage: React.FC = () => {
             ☰
           </button>
 
-          {/* Dropdown */}
-            {menuOpen && (
-              <div className="absolute right-0 top-14 w-56 bg-white rounded shadow-lg z-50">
-                
-                {/* Admin ou User */}
-                <button
-                  onClick={handleMenuClick}
-                  className="w-full text-left px-4 py-3 hover:bg-gray-100"
-                >
-                  {isAdmin ? "Manage Products" : "My Favorites"}
-                </button>
+          {menuOpen && (
+            <div className="absolute right-0 top-14 w-56 bg-white rounded shadow-lg z-50">
 
-                {/* Home */}
-                <button
-                  onClick={() => {
-                    setMenuOpen(false);
-                    router.push("/products/catalogo");
-                  }}
-                  className="w-full text-left px-4 py-3 hover:bg-gray-100"
-                >
-                  Home
-                </button>
-              </div>
-            )}
+              <button
+                onClick={handleMenuClick}
+                className="w-full text-left px-4 py-3 hover:bg-gray-100"
+              >
+                {isAdmin ? "Manage Products" : "My Favorites"}
+              </button>
 
+              <button
+                onClick={() => {
+                  setMenuOpen(false);
+                  router.push("/products/catalogo");
+                }}
+                className="w-full text-left px-4 py-3 hover:bg-gray-100"
+              >
+                Home
+              </button>
+
+            </div>
+          )}
         </div>
       </div>
     </nav>
