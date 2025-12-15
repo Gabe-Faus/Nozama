@@ -2,9 +2,8 @@ import React from 'react';
 import { notFound } from 'next/navigation';
 import ProductDetailsDisplay from './_components/detalhes_product';
 import { getProductDetails } from '../../../api/products/productsController';
-//import { auth } from '@/server/auth';
 
-const userIdFixo = 1;
+
 
 // Interface para os params
 interface ProductPageProps {
@@ -13,11 +12,6 @@ interface ProductPageProps {
 
 export default async function ProductDetailsPage({ params }: ProductPageProps) {
   try {
-
-    // Obter sessão do usuário
-    //const session = await auth();
-    //const userId = session?.user?.id;
-
     // params é uma Promise
     const resolvedParams = await params;
     const id = resolvedParams.id;
@@ -52,11 +46,7 @@ export default async function ProductDetailsPage({ params }: ProductPageProps) {
           },
           value: attr.value
         })) || [] // array vazio se não houver atributos
-      })) || [], // array vazio se não houver reviews
-      isFavorite: product.favoritos && Array.isArray(product.favoritos) 
-                ? product.favoritos.length > 0 
-                : false,
-      userId: userIdFixo,
+      })) || [] // array vazio se não houver reviews
     };
 
     // Renderizar componente de detalhes

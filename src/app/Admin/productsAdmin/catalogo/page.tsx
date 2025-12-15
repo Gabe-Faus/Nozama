@@ -1,14 +1,9 @@
 
 import React from 'react';
 import { getProductsForCatalog } from '../../../api/products/productsController'; 
-import ProductList from './_components/catalogo';
-// import { auth } from '@/server/auth'; 
-
-const userIdFixo = 1;
+import ProductList from './_components/catalogo'; 
 
 export default async function ProductCatalogPage() {
-  //const session = await auth();
-  //const userId = session?.user?.id ? parseInt(session.user.id) : undefined;
   
   let products = [];
   try {
@@ -29,7 +24,7 @@ export default async function ProductCatalogPage() {
   // Passa os dados buscados para o componente
   return (
     <main>
-        <ProductList products={products} userId={userIdFixo} />
+        <ProductList products={products} />
     </main>
   );
 }

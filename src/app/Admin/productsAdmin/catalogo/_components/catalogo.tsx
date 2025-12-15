@@ -1,6 +1,6 @@
 
 "use client";
-import React, {useState} from "react";
+import React from "react";
 import Link from "next/link";
 import { Heart } from "lucide-react";
 
@@ -10,46 +10,16 @@ interface ProductItem {
   name: string;
   evaluation_avg: number | null;
   photo: string;
-  category: {name: string;};
-  isFavorite?: boolean;
+  category: {
+    name: string;
+  };
 }
 
 interface ProductListProps {
   products: ProductItem[];
-  userId?: number;
 }
 
-const ProductList: React.FC<ProductListProps> = ({ products, userId }) => {
-
-  const [favorites, setFavorites] = useState<number[]>(
-    products.filter(p => p.isFavorite).map(p => p.id)
-  );
-
-  const toggleFavorite = async (productId: number) => {
-    
-    const isCurrentlyFavorite = favorites.includes(productId);
-    try {
-      
-      //Remove dos favoritos
-      if (isCurrentlyFavorite) {
-        await fetch(`/api/favorites/${productId}`, { method: 'DELETE' });
-        setFavorites(favorites.filter(id => id !== productId));
-
-      // Adiciona nos favoritos  
-      } else {
-        await fetch('/api/favorites', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ productId, userId }),
-        });
-        setFavorites([...favorites, productId]);
-      }
-    } catch (error) {
-      console.error('Erro ao atualizar favorito:', error);
-    }
-  };
-
-
+const ProductList: React.FC<ProductListProps> = ({ products }) => {
   return (
     <section className="bg-bodyamazon min-h-screen flex flex-col items-center py-12 px-4">
       <h1 className="font-amazon text-3xl font-bold mb-8">
@@ -74,22 +44,12 @@ const ProductList: React.FC<ProductListProps> = ({ products, userId }) => {
                 </Link>
 
                 {/* Botão de Favorito */}
-                 <button 
-                  onClick={(e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    toggleFavorite(product.id);
-                  }}
-                  className="absolute top-2 right-2 bg-white p-2 rounded-full shadow hover:shadow-lg z-10"
+                <button 
+                    className="absolute top-2 right-2 bg-white p-2 rounded-full shadow"
+                    onClick={() => console.log(`Favoritar produto ${product.id}`)}
                 >
-                  <Heart 
-                    className={
-                      favorites.includes(product.id)
-                        ? 'fill-red-500 text-red-500'
-                        : 'text-gray-400 hover:text-red-500'
-                    }
-                    size={20}
-                  />
+                  {/* Preenche o coração se o produto for favorito */}
+                  <Heart className="text-gray-400 hover:text-red-500 hover:fill-red-500 transition" size={20} />
                 </button>
               </div>
 
