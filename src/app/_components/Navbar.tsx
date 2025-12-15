@@ -4,11 +4,14 @@
 
 import React, {useState} from "react";
 import { useSession, signOut } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 
 const Navbar: React.FC = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const { data: session } = useSession();
+
+  const router = useRouter();
 
   const handleScrollToSection = (id: string) => {
     const section = document.getElementById(id);
@@ -16,6 +19,10 @@ const Navbar: React.FC = () => {
       section.scrollIntoView({ behavior: "smooth" });
       setMenuOpen(false); 
     }
+  };
+
+  const handleGoToAccount = () => {
+    router.push("/Account");
   };
 
   return (
@@ -48,9 +55,27 @@ const Navbar: React.FC = () => {
         <div className="flex items-center gap-4 cursor-pointer">
           {session?.user ? (
             <div className="flex items-center gap-1 md:gap-2">
-              <span className="hidden md:inline text-white">Hello, {session.user.name}</span>
-              <span className="md:hidden text-white">Hi, {session.user.name?.split(' ')[0] || 'User'}</span>
+
+              <button onClick={handleGoToAccount} className="text-white hover:text-gray-300 transition-colors">
+                {/* Para todos os usuários */}
+                <span className="hidden md:inline text-white">
+                  Hello, {session.user.name || session.user.email?.split('@')[0] || 'User'}
+                </span>
+                <span className="md:hidden text-white">
+                  Hello, {(session.user.name || session.user.email?.split('@')[0] || 'User')?.split(' ')[0]}
+                </span>
+              </button>
+
+              {/* Para ADMIN */}
+              {(session.user as any).isAdmin && ( 
+                <>
+                  <span className="text-gray-400 hidden sm:inline">|</span>
+                  <span className="text-red-400 font-bold text-sm sm:text-base"> ADMIN </span>
+                </>
+              )}
+
               <span className="text-gray-400 hidden sm:inline">|</span>
+
               <button onClick={() => signOut()}
                 className="text-white hover:text-gray-300 text-sm flex items-center gap-1"
                 aria-label="Sign Out">
@@ -112,7 +137,7 @@ const Navbar: React.FC = () => {
         </a>
       </div>
 
-      {/* Menu mobile (mostrado quando menuOpen = true) */}
+      {/* Menu mobile */}
       {menuOpen && (
         <div className="md:hidden bg-scndnavbar flex flex-col items-center py-4 space-y-2 animate-slideDown">
           <h1
